@@ -6,7 +6,7 @@ class QuorumClient {
   final http.Client httpClient;
   final String baseURL;
   final EthereumAddress contractAddress =
-      EthereumAddress.fromHex('0x4b6b4A18FFAD4D1c2D69E7fF61870B9543B8c52D');
+      EthereumAddress.fromHex('0x167c5A6a1bCcda0c6D66AC9F9BA78545357De5f9');
 
   QuorumClient({http.Client httpClient, String baseURL})
       : httpClient = httpClient ?? http.Client(),
@@ -40,13 +40,16 @@ class QuorumClient {
     }
   }
 
-  Future<bool> checkDevice(String deviceId) async {
+  Future<bool> checkDevice(EthereumAddress sender, String deviceId) async {
     try {
       print('Check device for "$deviceId"');
       final contract = await getContract();
       final validateFun = contract.function('validate');
-      final result = await getClient()
-          .call(contract: contract, function: validateFun, params: [deviceId]);
+      final result = await getClient().call(
+          sender: sender,
+          contract: contract,
+          function: validateFun,
+          params: [deviceId]);
       return result.first;
     } catch (e) {
       print('Error: $e');

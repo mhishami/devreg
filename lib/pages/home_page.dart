@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     final owner = await repo.getOwner();
     print('owner: $owner');
 
-    final result = await repo.checkDevice('iPhoneSE');
+    final result = await repo.checkDevice(ethAddress, 'iPhoneSE');
     print('result: $result');
 
     setState(() {
