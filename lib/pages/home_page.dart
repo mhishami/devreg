@@ -19,12 +19,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    prepareAddress();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Web3 Demo')),
+      appBar: AppBar(title: Text('Device Registry')),
       body: buildContent(context),
     );
   }
@@ -32,57 +33,52 @@ class _HomePageState extends State<HomePage> {
   buildContent(BuildContext context) {
     final theme = Theme.of(context).textTheme;
 
-    return FutureBuilder(
-      future: prepareAdress(),
-      builder: (context, snapshot) {
-        return Container(
-          margin: EdgeInsets.all(22),
-          width: double.infinity,
-          child: Card(
-            elevation: 5.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Validate Your Device',
-                  style: theme.headline4,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20),
-                Text(
-                  'Your Wallet Address:',
-                  style: theme.headline6.apply(fontSizeDelta: -3),
-                ),
-                SizedBox(
-                    width: 200,
-                    child: Text(
-                      '${ethAddress?.hexEip55}',
-                      textAlign: TextAlign.center,
-                    )),
-                SizedBox(height: 20),
-                deviceIsValid
-                    ? Text(
-                        'Horaayyy',
-                        style: TextStyle(color: Colors.green),
-                      )
-                    : Text('Device Status Unknown',
-                        style: TextStyle(color: Colors.red)),
-                RaisedButton(
-                  onPressed: () => checkDevice(),
-                  textColor: Colors.white,
-                  color: Colors.blue,
-                  child: Text('Check Authorization'),
-                ),
-              ],
+    return Container(
+      margin: EdgeInsets.all(22),
+      width: double.infinity,
+      child: Card(
+        elevation: 5.0,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Validate Your Device',
+              style: theme.headline4,
+              textAlign: TextAlign.center,
             ),
-          ),
-        );
-      },
+            SizedBox(height: 20),
+            Text(
+              'Your Wallet Address:',
+              style: theme.headline6.apply(fontSizeDelta: -3),
+            ),
+            SizedBox(
+                width: 200,
+                child: Text(
+                  '${ethAddress?.hexEip55}',
+                  textAlign: TextAlign.center,
+                )),
+            SizedBox(height: 20),
+            deviceIsValid
+                ? Text(
+                    'Horaayyy',
+                    style: TextStyle(color: Colors.green),
+                  )
+                : Text('Device Status Unknown',
+                    style: TextStyle(color: Colors.red)),
+            RaisedButton(
+              onPressed: () => checkDevice(),
+              textColor: Colors.white,
+              color: Colors.blue,
+              child: Text('Check Authorization'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  prepareAdress() async {
+  Future<void> prepareAddress() async {
     // print('prepareAdress::mnemonic: ${widget.mnemonic}');
     final _privKey = WalletHd.ethMnemonicToPrivateKey(widget.mnemonic);
     final _addr = await _privKey.extractAddress();
