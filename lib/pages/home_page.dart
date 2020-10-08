@@ -17,6 +17,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   EthPrivateKey privKey;
   EthereumAddress ethAddress;
+  String deviceId = '';
+
   bool deviceIsValid = false;
   bool hasValidated = false;
   String errorMessage = 'Device Is Unregistered';
@@ -25,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     prepareAddress();
+    initDeviceId();
   }
 
   @override
@@ -38,11 +41,12 @@ class _HomePageState extends State<HomePage> {
   buildContent(BuildContext context) {
     final theme = Theme.of(context).textTheme;
 
-    return Container(
-      margin: EdgeInsets.all(22),
-      width: double.infinity,
-      child: Card(
-        elevation: 5.0,
+    return Card(
+      elevation: 5.0,
+      margin: EdgeInsets.all(10),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(22),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,14 +59,25 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 20),
             Text(
               'Your Wallet Address:',
-              style: theme.headline6.apply(fontSizeDelta: -3),
+              style: theme.headline6,
             ),
             SizedBox(
-                width: 200,
-                child: Text(
-                  '${ethAddress?.hexEip55}',
-                  textAlign: TextAlign.center,
-                )),
+              width: 200,
+              child: Text(
+                '${ethAddress?.hexEip55}',
+                textAlign: TextAlign.center,
+                // overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'DeviceId:',
+              style: theme.headline6,
+            ),
+            Text(
+              deviceId,
+              overflow: TextOverflow.ellipsis,
+            ),
             SizedBox(height: 20),
             deviceIsValid
                 ? Text(
@@ -72,6 +87,7 @@ class _HomePageState extends State<HomePage> {
                   )
                 : Text(hasValidated ? errorMessage : 'Device Status Unknown',
                     style: TextStyle(color: Colors.red)),
+            SizedBox(height: 20),
             RaisedButton(
               onPressed: () => checkDevice(),
               textColor: Colors.white,
@@ -102,7 +118,6 @@ class _HomePageState extends State<HomePage> {
     final owner = await repo.getOwner();
     print('owner: $owner');
 
-    final deviceId = await getDeviceId();
     final result = await repo.checkDevice(ethAddress, deviceId);
     print('result: $result');
 
@@ -112,14 +127,18 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<String> getDeviceId() async {
+  Future<void> initDeviceId() async {
     final deviceInfo = DeviceInfoPlugin();
     if (Platform.isIOS) {
       final iosInfo = await deviceInfo.iosInfo;
-      return iosInfo.identifierForVendor;
+      setState(() {
+        deviceId = iosInfo.identifierForVendor;
+      });
     } else {
       final androidInfo = await deviceInfo.androidInfo;
-      return androidInfo.androidId;
+      setState(() {
+        deviceId = androidInfo.androidId;
+      });
     }
   }
 }
