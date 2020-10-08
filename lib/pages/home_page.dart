@@ -6,8 +6,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _mnemonic;
-
   @override
   void initState() {
     super.initState();
