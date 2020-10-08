@@ -1,3 +1,4 @@
+import 'package:devreg/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_hd/wallet_hd.dart';
 import 'package:web3dart/web3dart.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   EthPrivateKey privKey;
   EthereumAddress ethAddress;
+  bool deviceIsValid = false;
 
   @override
   void initState() {
@@ -43,14 +45,31 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Welcome...',
+                  'Validate Your Device',
                   style: theme.headline4,
+                  textAlign: TextAlign.center,
                 ),
-                Text('Your Wallet Address:'),
-                SizedBox(width: 250, child: Text('${ethAddress?.hexEip55}')),
                 SizedBox(height: 20),
+                Text(
+                  'Your Wallet Address:',
+                  style: theme.headline6.apply(fontSizeDelta: -3),
+                ),
+                SizedBox(
+                    width: 200,
+                    child: Text(
+                      '${ethAddress?.hexEip55}',
+                      textAlign: TextAlign.center,
+                    )),
+                SizedBox(height: 20),
+                deviceIsValid
+                    ? Text(
+                        'Horaayyy',
+                        style: TextStyle(color: Colors.green),
+                      )
+                    : Text('Device Status Unknown',
+                        style: TextStyle(color: Colors.red)),
                 RaisedButton(
-                  onPressed: () => print('You clicked me!'),
+                  onPressed: () => checkDevice(),
                   textColor: Colors.white,
                   color: Colors.blue,
                   child: Text('Check Authorization'),
@@ -73,5 +92,19 @@ class _HomePageState extends State<HomePage> {
       ethAddress = _addr;
     });
     return true;
+  }
+
+  Future<void> checkDevice() async {
+    print('Address: ${ethAddress?.hexEip55}');
+    QuorumRepository repo = QuorumRepository();
+    final owner = await repo.getOwner();
+    print('owner: $owner');
+
+    final result = await repo.checkDevice('iPhoneSE');
+    print('result: $result');
+
+    setState(() {
+      deviceIsValid = result;
+    });
   }
 }
