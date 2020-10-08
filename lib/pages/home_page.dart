@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info/device_info.dart';
 import 'package:devreg/repository/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_hd/wallet_hd.dart';
@@ -15,6 +18,8 @@ class _HomePageState extends State<HomePage> {
   EthPrivateKey privKey;
   EthereumAddress ethAddress;
   bool deviceIsValid = false;
+  bool hasValidated = false;
+  String errorMessage = 'Device Is Unregistered';
 
   @override
   void initState() {
@@ -61,10 +66,11 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 20),
             deviceIsValid
                 ? Text(
-                    'Horaayyy',
-                    style: TextStyle(color: Colors.green),
+                    'Device Is Registered',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
                   )
-                : Text('Device Status Unknown',
+                : Text(hasValidated ? errorMessage : 'Device Status Unknown',
                     style: TextStyle(color: Colors.red)),
             RaisedButton(
               onPressed: () => checkDevice(),
@@ -96,11 +102,24 @@ class _HomePageState extends State<HomePage> {
     final owner = await repo.getOwner();
     print('owner: $owner');
 
-    final result = await repo.checkDevice(ethAddress, 'iPhoneSE');
+    final deviceId = await getDeviceId();
+    final result = await repo.checkDevice(ethAddress, deviceId);
     print('result: $result');
 
     setState(() {
       deviceIsValid = result;
+      hasValidated = true;
     });
+  }
+
+  Future<String> getDeviceId() async {
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      final iosInfo = await deviceInfo.iosInfo;
+      return iosInfo.identifierForVendor;
+    } else {
+      final androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.androidId;
+    }
   }
 }
