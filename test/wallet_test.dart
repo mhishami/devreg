@@ -1,4 +1,4 @@
-import 'package:dotenv/dotenv.dart' show load, clean, env;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hex/hex.dart';
 import 'package:http/http.dart' as http;
@@ -7,10 +7,9 @@ import 'package:web3dart/web3dart.dart';
 
 void main() {
   test('generate address', () async {
-    load();
-    final mnemonic = env['MNEMONICS'];
+    DotEnv().load('.env');
+    final mnemonic = DotEnv().env['MNEMONICS'];
     print('mnem: $mnemonic');
-    clean();
 
     // generate our address
     final pk = WalletHd.ethMnemonicToPrivateKey(mnemonic);
