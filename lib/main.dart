@@ -1,12 +1,18 @@
 import 'package:devreg/pages/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:wallet_hd/wallet_hd.dart';
 
 void main() async {
   await DotEnv().load('.env');
   final mnemonic = DotEnv().env['MNEMONIC'] ?? WalletHd.createRandomMnemonic();
-  print('mnemonic: $mnemonic');
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.light));
+
   runApp(MyApp(mnemonic: mnemonic));
 }
 

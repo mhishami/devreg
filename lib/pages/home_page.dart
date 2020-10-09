@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:devreg/repository/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:wallet_hd/wallet_hd.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -33,8 +34,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Device Registry')),
-      body: buildContent(context),
+      // appBar: AppBar(title: Text('Device Registry')),
+      backgroundColor: Colors.grey[100],
+      body: SafeArea(child: buildContent(context)),
     );
   }
 
@@ -43,7 +45,8 @@ class _HomePageState extends State<HomePage> {
 
     return Card(
       elevation: 5.0,
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(20),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(22),
@@ -53,13 +56,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               'Validate Your Device',
-              style: theme.headline4,
+              style: theme.headline5,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             Text(
               'Your Wallet Address:',
-              style: theme.headline6,
+              style: theme.headline6.apply(fontSizeDelta: -8),
             ),
             SizedBox(
               width: 200,
@@ -72,11 +75,18 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 20),
             Text(
               'DeviceId:',
-              style: theme.headline6,
+              style: theme.headline6.apply(fontSizeDelta: -8),
             ),
-            Text(
-              deviceId,
-              overflow: TextOverflow.ellipsis,
+            QrImage(
+              data: deviceId, //'idevice://deviceId?location=IIUM',
+              size: 200,
+            ),
+            SizedBox(
+              width: 200,
+              child: Text(
+                deviceId,
+                textAlign: TextAlign.center,
+              ),
             ),
             SizedBox(height: 20),
             deviceIsValid
