@@ -6,7 +6,7 @@ class QuorumClient {
   final http.Client httpClient;
   final String baseURL;
   final EthereumAddress contractAddress =
-      EthereumAddress.fromHex('0x167c5A6a1bCcda0c6D66AC9F9BA78545357De5f9');
+      EthereumAddress.fromHex('0x4928f3777Bff5FD293DB79E8c5D4239F12B953DC');
 
   QuorumClient({http.Client httpClient, String baseURL})
       : httpClient = httpClient ?? http.Client(),
