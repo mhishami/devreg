@@ -14,7 +14,7 @@ The app is broken down into 3 steps:
   2. The UI components
   3. The Smart Contract integration
   
-Change into the specific branch to see the progress, and run the app in the simulator, or direct into your hardware by connecting through USB cable.
+Change into the specific branch to see the progress, and run the app in the simulator, or direct from your hardware by connecting through USB cable.
 
 e.g.:
 ```bash
