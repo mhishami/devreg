@@ -6,7 +6,9 @@ import 'package:wallet_hd/wallet_hd.dart';
 
 Future<void> main() async {
   await DotEnv().load('.secret');
-  final secret = DotEnv().env['MNEMONIC'] ?? WalletHd.createRandomMnemonic();
+  final secret =
+      'exile knock awkward insect foil silent close sea panther tackle plate sand'; //DotEnv().env['MNEMONIC'] ?? WalletHd.createRandomMnemonic();
+  print('secret: $secret');
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarBrightness: Brightness.light,
